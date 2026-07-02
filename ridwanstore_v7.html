@@ -1,0 +1,490 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 auto;}
+.navbar{background:#0066cc;color:#ffffff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
+.navbar-title{font-size:18px;font-weight:bold;flex:1;text-align:center;color:#ffffff;}
+.back-btn{background:none;border:none;color:#ffffff;font-size:22px;cursor:pointer;padding:0 4px;line-height:1;}
+.page{display:none;animation:fadeIn 0.2s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.home-banner{background:linear-gradient(135deg,#0066cc,#0099ff);color:#ffffff;padding:20px 16px;text-align:center;}
+.home-banner h2{font-size:20px;margin-bottom:4px;color:#ffffff;}
+.home-banner p{font-size:13px;opacity:0.9;color:#ffffff;}
+.section-title{font-size:12px;font-weight:bold;color:#888;padding:14px 16px 8px;text-transform:uppercase;letter-spacing:0.5px;}
+.kategori-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 12px 16px;}
+.kat-card{background:#ffffff;border-radius:14px;padding:16px 8px;text-align:center;cursor:pointer;border:none;transition:transform 0.15s;box-shadow:0 1px 4px rgba(0,0,0,0.08);width:100%;}
+.kat-card:active{transform:scale(0.96);}
+.kat-icon{font-size:30px;margin-bottom:6px;}
+.kat-label{font-size:12px;font-weight:bold;color:#333;line-height:1.3;}
+
+/* PAYMENT FOOTER */
+.payment-footer{background:#ffffff;border-top:3px solid #0066cc;padding:14px 16px 20px;margin-top:4px;}
+.payment-footer-title{font-size:12px;font-weight:bold;color:#0066cc;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;text-align:center;}
+.payment-icons{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
+.pay-badge{background:#f0f4f8;border:1px solid #dde3ec;border-radius:8px;padding:5px 11px;font-size:12px;font-weight:bold;color:#333;}
+
+.op-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 12px 8px;}
+.op-card{background:#ffffff;border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all 0.15s;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+.op-card:active{transform:scale(0.96);}
+.op-card.selected{border-color:#0066cc;background:#e6f1fb;}
+.op-icon{font-size:26px;margin-bottom:5px;}
+.op-name{font-size:11px;font-weight:bold;color:#333;}
+.op-jumlah{font-size:10px;color:#888;margin-top:2px;}
+.produk-list{padding:0 12px 80px;}
+.produk-card{background:#ffffff;border-radius:12px;padding:13px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.produk-info h4{font-size:14px;color:#222;margin-bottom:2px;font-weight:bold;}
+.produk-info p{font-size:11px;color:#aaa;}
+.produk-kanan{text-align:right;flex-shrink:0;margin-left:8px;}
+.produk-harga{font-size:15px;font-weight:bold;color:#ff5500;margin-bottom:6px;}
+.btn-wa{display:inline-block;background:#25d366 !important;color:#ffffff !important;border:none !important;padding:9px 14px;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;opacity:1 !important;visibility:visible !important;box-shadow:0 2px 6px rgba(0,0,0,0.15);-webkit-tap-highlight-color:rgba(0,0,0,0);transition:background 0.1s,transform 0.1s;white-space:nowrap;}
+.btn-wa:hover{background:#22c55e !important;}
+.btn-wa:active{background:#16a34a !important;transform:scale(0.95);}
+.filter-bar{display:flex;gap:8px;padding:8px 12px;overflow-x:auto;scrollbar-width:none;}
+.filter-bar::-webkit-scrollbar{display:none;}
+.filter-chip{background:#ffffff;border:1.5px solid #ddd;color:#555;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:bold;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.filter-chip.active{background:#0066cc;border-color:#0066cc;color:#ffffff;}
+.harga-table{margin:12px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.harga-table-header{background:#0066cc;color:#ffffff;padding:12px 16px;font-weight:bold;font-size:14px;}
+.harga-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #f0f0f0;}
+.harga-row:last-child{border-bottom:none;}
+.harga-row-label{font-size:13px;color:#333;}
+.harga-row-harga{font-size:13px;font-weight:bold;color:#0066cc;}
+.info-box{border-radius:12px;margin:12px;padding:12px 14px;font-size:12px;line-height:1.7;}
+.info-box.kuning{background:#fff8e1;border:1px solid #ffe082;color:#7b6000;}
+.info-box.kuning b{color:#f57f17;}
+.info-box.biru{background:#e3f2fd;border:1px solid #90caf9;color:#0d47a1;}
+.info-box.hijau{background:#e8f5e9;border:1px solid #a5d6a7;color:#1b5e20;}
+.info-box.hijau b{color:#2e7d32;}
+.diamond-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px 12px;}
+.diamond-card{background:#ffffff;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.diamond-card .dm-jumlah{font-size:14px;font-weight:bold;color:#333;margin-bottom:4px;}
+.diamond-card .dm-harga{font-size:14px;font-weight:bold;color:#ff5500;margin-bottom:8px;}
+.diamond-card .btn-wa{width:100%;padding:8px 0;}
+.ewallet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px 80px;}
+.ewallet-card{background:#ffffff;border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.ewallet-card .ew-icon{font-size:26px;}
+.ewallet-card .ew-name{font-size:13px;font-weight:bold;color:#333;}
+.ewallet-card .ew-admin{font-size:11px;color:#888;}
+.ewallet-card .btn-wa{width:100%;padding:8px 0;margin-top:2px;}
+.bank-card{background:#ffffff;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin:0 12px 8px;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.bank-card .bank-icon{font-size:24px;}
+.bank-card .bank-info{flex:1;}
+.bank-card .bank-name{font-size:13px;font-weight:bold;color:#333;}
+.bank-card .bank-admin{font-size:11px;color:#888;}
+.tab-bar{display:flex;gap:0;margin:12px;border-radius:10px;overflow:hidden;border:1.5px solid #0066cc;}
+.tab-bar button{flex:1;padding:9px 0;font-size:12px;font-weight:bold;border:none;cursor:pointer;background:#ffffff;color:#0066cc;transition:all 0.15s;}
+.tab-bar button.active{background:#0066cc;color:#ffffff;}
+.coming-soon{text-align:center;padding:60px 20px;}
+.coming-soon .cs-icon{font-size:50px;margin-bottom:12px;}
+.coming-soon h3{font-size:16px;color:#333;margin-bottom:8px;}
+.coming-soon p{font-size:13px;color:#aaa;}
+.divider-label{font-size:11px;color:#bbb;padding:10px 12px 4px;font-weight:bold;}
+.masa-aktif-section{background:#f7fbff;border-top:1px solid #e0ecff;margin-top:8px;padding:12px 12px 0;}
+.masa-aktif-title{font-size:11px;font-weight:bold;color:#0066cc;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;}
+.masa-aktif-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding-bottom:12px;}
+.ma-card{background:#ffffff;border-radius:10px;padding:10px 12px;border:1px solid #d0e4f7;text-align:center;}
+.ma-card .ma-durasi{font-size:13px;font-weight:bold;color:#0066cc;margin-bottom:3px;}
+.ma-card .ma-harga{font-size:13px;color:#ff5500;font-weight:bold;}
+.ma-card .btn-wa{width:100%;margin-top:8px;padding:7px 0;font-size:11px;}
+</style>
+
+<div class="navbar">
+  <button class="back-btn" id="back-btn" onclick="goBack()" style="visibility:hidden;">←</button>
+  <span class="navbar-title" id="navbar-title">🛍️ Ridwan Store</span>
+  <div style="width:30px;"></div>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="home-banner">
+    <h2>Selamat Datang! 👋</h2>
+    <p>Ridwan Store — Serba Ada, Mudah & Cepat</p>
+  </div>
+  <div class="section-title">Layanan Kami</div>
+  <div class="kategori-grid">
+    <button class="kat-card" onclick="goPage('page-paketdata','Paket Data')"><div class="kat-icon">📶</div><div class="kat-label">Paket Data</div></button>
+    <button class="kat-card" onclick="goPage('page-pulsa','Pulsa')"><div class="kat-icon">💳</div><div class="kat-label">Pulsa</div></button>
+    <button class="kat-card" onclick="goPage('page-token','Token Listrik')"><div class="kat-icon">⚡</div><div class="kat-label">Token Listrik</div></button>
+    <button class="kat-card" onclick="goPage('page-game','Top Up Game')"><div class="kat-icon">🎮</div><div class="kat-label">Top Up Game</div></button>
+    <button class="kat-card" onclick="goPage('page-ewallet','E-Wallet')"><div class="kat-icon">💰</div><div class="kat-label">E-Wallet</div></button>
+    <button class="kat-card" onclick="goPage('page-bank','Transfer Bank')"><div class="kat-icon">🏦</div><div class="kat-label">Transfer Bank</div></button>
+    <button class="kat-card" onclick="goPage('page-masaaktif','Masa Aktif')"><div class="kat-icon">📅</div><div class="kat-label">Masa Aktif</div></button>
+    <button class="kat-card" onclick="goPage('page-fotocopy','Print & Foto')"><div class="kat-icon">🖨️</div><div class="kat-label">Print & Foto</div></button>
+  </div>
+
+  <!-- PAYMENT INFO — sekarang di bawah grid, tidak ganggu fokus -->
+  <div class="payment-footer">
+    <div class="payment-footer-title">💳 Metode Pembayaran yang Kami Terima</div>
+    <div class="payment-icons">
+      <span class="pay-badge">OVO</span>
+      <span class="pay-badge">ShopeePay</span>
+      <span class="pay-badge">GoPay</span>
+      <span class="pay-badge">DANA</span>
+      <span class="pay-badge">SeaBank</span>
+      <span class="pay-badge">BCA</span>
+      <span class="pay-badge">Blu</span>
+      <span class="pay-badge">QRIS</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAKET DATA -->
+<div class="page" id="page-paketdata">
+  <div class="section-title">Pilih Operator</div>
+  <div class="op-grid">
+    <div class="op-card" onclick="pilihOpPaket('telkomsel',this)"><div class="op-icon">🔴</div><div class="op-name">Telkomsel</div></div>
+    <div class="op-card" onclick="pilihOpPaket('indosat',this)"><div class="op-icon">🟡</div><div class="op-name">Indosat/IM3</div></div>
+    <div class="op-card" onclick="pilihOpPaket('xl',this)"><div class="op-icon">🔵</div><div class="op-name">XL / Axis</div></div>
+    <div class="op-card" onclick="pilihOpPaket('three',this)"><div class="op-icon">⚫</div><div class="op-name">Tri (3)</div></div>
+    <div class="op-card" onclick="pilihOpPaket('smartfren',this)"><div class="op-icon">🟣</div><div class="op-name">Smartfren</div></div>
+    <div class="op-card" onclick="pilihOpPaket('byu',this)"><div class="op-icon">🟢</div><div class="op-name">By.U</div></div>
+  </div>
+  <div id="filter-paket" class="filter-bar" style="display:none;">
+    <button class="filter-chip active" onclick="filterPaket('semua',this)">Semua</button>
+    <button class="filter-chip" onclick="filterPaket('harian',this)">Harian</button>
+    <button class="filter-chip" onclick="filterPaket('mingguan',this)">Mingguan</button>
+    <button class="filter-chip" onclick="filterPaket('bulanan',this)">Bulanan</button>
+  </div>
+  <div id="list-paket" class="produk-list" style="margin-top:8px;">
+    <div style="text-align:center;padding:40px 20px;color:#aaa;"><div style="font-size:40px;">👆</div><p style="margin-top:10px;">Pilih operator di atas</p></div>
+  </div>
+</div>
+
+<!-- PULSA -->
+<div class="page" id="page-pulsa">
+  <div class="section-title">Pilih Operator</div>
+  <div class="op-grid">
+    <div class="op-card" onclick="pilihOpPulsa('telkomsel',this)"><div class="op-icon">🔴</div><div class="op-name">Telkomsel</div><div class="op-jumlah" id="jml-telkomsel"></div></div>
+    <div class="op-card" onclick="pilihOpPulsa('indosat',this)"><div class="op-icon">🟡</div><div class="op-name">Indosat/IM3</div><div class="op-jumlah" id="jml-indosat"></div></div>
+    <div class="op-card" onclick="pilihOpPulsa('xl',this)"><div class="op-icon">🔵</div><div class="op-name">XL</div><div class="op-jumlah" id="jml-xl"></div></div>
+    <div class="op-card" onclick="pilihOpPulsa('axis',this)"><div class="op-icon">🟠</div><div class="op-name">Axis</div><div class="op-jumlah" id="jml-axis"></div></div>
+    <div class="op-card" onclick="pilihOpPulsa('three',this)"><div class="op-icon">⚫</div><div class="op-name">Tri (3)</div><div class="op-jumlah" id="jml-three"></div></div>
+    <div class="op-card" onclick="pilihOpPulsa('smartfren',this)"><div class="op-icon">🟣</div><div class="op-name">Smartfren</div><div class="op-jumlah" id="jml-smartfren"></div></div>
+    <div class="op-card" onclick="pilihOpPulsa('byu',this)"><div class="op-icon">🟢</div><div class="op-name">By.U</div><div class="op-jumlah" id="jml-byu"></div></div>
+  </div>
+  <div id="list-pulsa" class="produk-list" style="margin-top:8px;">
+    <div style="text-align:center;padding:40px 20px;color:#aaa;"><div style="font-size:40px;">👆</div><p style="margin-top:10px;">Pilih operator di atas</p></div>
+  </div>
+</div>
+
+<!-- TOKEN LISTRIK -->
+<div class="page" id="page-token">
+  <div class="info-box kuning">⚡ <b>Cara beli:</b> Klik tombol "Beli WA", lalu kirimkan <b>nomor meter PLN</b> kamu.</div>
+  <div class="section-title">Pilih Nominal Token PLN</div>
+  <div class="produk-list" id="list-token"></div>
+</div>
+
+<!-- MASA AKTIF -->
+<div class="page" id="page-masaaktif">
+  <div class="info-box biru">📅 Perpanjang masa aktif kartu tanpa tambah pulsa.</div>
+  <div id="masa-aktif-content"></div>
+</div>
+
+<!-- TOP UP GAME -->
+<div class="page" id="page-game">
+  <div class="section-title">Pilih Game</div>
+  <div class="kategori-grid">
+    <button class="kat-card" onclick="goPage('page-ml','Mobile Legends')"><div class="kat-icon">⚔️</div><div class="kat-label">Mobile Legends</div></button>
+    <button class="kat-card" onclick="goPage('page-ff','Free Fire')"><div class="kat-icon">🔥</div><div class="kat-label">Free Fire</div></button>
+    <button class="kat-card" onclick="goPage('page-pubg','PUBG Mobile')"><div class="kat-icon">🎯</div><div class="kat-label">PUBG Mobile</div></button>
+    <button class="kat-card" onclick="goPage('page-valo','Valorant')"><div class="kat-icon">🏹</div><div class="kat-label">Valorant</div></button>
+    <button class="kat-card" onclick="goPage('page-roblox','Roblox')"><div class="kat-icon">🟥</div><div class="kat-label">Roblox</div></button>
+    <button class="kat-card" onclick="goPage('page-steam','Steam')"><div class="kat-icon">🎲</div><div class="kat-label">Steam</div></button>
+    <button class="kat-card" onclick="goPage('page-unipin','UniPin')"><div class="kat-icon">🎟️</div><div class="kat-label">UniPin</div></button>
+    <button class="kat-card" onclick="goPage('page-coda','Codashop')"><div class="kat-icon">🛒</div><div class="kat-label">Codashop</div></button>
+    <button class="kat-card" onclick="goPage('page-game-lain','Game Lainnya')"><div class="kat-icon">🕹️</div><div class="kat-label">Lainnya</div></button>
+  </div>
+</div>
+
+<!-- FREE FIRE -->
+<div class="page" id="page-ff">
+  <div class="tab-bar">
+    <button class="active" onclick="ffTab('diamond',this)">💎 Diamond</button>
+    <button onclick="ffTab('member',this)">🎫 Membership & Pass</button>
+  </div>
+  <div id="ff-diamond">
+    <div class="info-box biru" style="margin-top:8px;">💎 Siapkan <b>ID Free Fire</b> kamu saat chat WA</div>
+    <div class="section-title">Harga Diamond Free Fire</div>
+    <div class="diamond-grid" id="ff-diamond-grid"></div>
+  </div>
+  <div id="ff-member" style="display:none;">
+    <div class="info-box biru" style="margin-top:8px;">🎫 Siapkan <b>ID Free Fire</b> kamu saat chat WA</div>
+    <div class="produk-list" id="ff-member-list" style="padding-top:8px;"></div>
+  </div>
+</div>
+
+<!-- E-WALLET -->
+<div class="page" id="page-ewallet">
+  <div class="info-box hijau">💰 <b>Biaya Admin:</b><br>Rp 1rb–39rb → <b>Rp 2.000</b><br>Rp 40rb–49rb → <b>Rp 3.000</b><br>Rp 50rb–500rb → <b>Rp 5.000</b><br>Rp 500rb–1jt → <b>Rp 10.000</b><br>Rp 1jt–1,5jt → <b>Rp 15.000</b><br>Rp 1,5jt–2jt → <b>Rp 20.000</b></div>
+  <div class="section-title">Pilih E-Wallet</div>
+  <div class="ewallet-grid">
+    <div class="ewallet-card"><div class="ew-icon">💜</div><div class="ew-name">OVO</div><div class="ew-admin">Admin sesuai nominal</div><button class="btn-wa" onclick="beliEwallet('OVO')">Top Up WA</button></div>
+    <div class="ewallet-card"><div class="ew-icon">💚</div><div class="ew-name">GoPay</div><div class="ew-admin">Admin sesuai nominal</div><button class="btn-wa" onclick="beliEwallet('GoPay')">Top Up WA</button></div>
+    <div class="ewallet-card"><div class="ew-icon">💙</div><div class="ew-name">DANA</div><div class="ew-admin">Admin sesuai nominal</div><button class="btn-wa" onclick="beliEwallet('DANA')">Top Up WA</button></div>
+    <div class="ewallet-card"><div class="ew-icon">🧡</div><div class="ew-name">ShopeePay</div><div class="ew-admin">Admin sesuai nominal</div><button class="btn-wa" onclick="beliEwallet('ShopeePay')">Top Up WA</button></div>
+    <div class="ewallet-card"><div class="ew-icon">💛</div><div class="ew-name">LinkAja</div><div class="ew-admin">Admin sesuai nominal</div><button class="btn-wa" onclick="beliEwallet('LinkAja')">Top Up WA</button></div>
+    <div class="ewallet-card"><div class="ew-icon">🌊</div><div class="ew-name">SeaBank</div><div class="ew-admin">Admin sesuai nominal</div><button class="btn-wa" onclick="beliEwallet('SeaBank')">Top Up WA</button></div>
+  </div>
+</div>
+
+<!-- TRANSFER BANK -->
+<div class="page" id="page-bank">
+  <div class="info-box hijau">🏦 <b>Biaya Admin:</b><br>Rp 1rb–39rb → <b>Rp 2.000</b><br>Rp 40rb–49rb → <b>Rp 3.000</b><br>Rp 50rb–500rb → <b>Rp 5.000</b><br>Rp 500rb–1jt → <b>Rp 10.000</b><br>Rp 1jt–1,5jt → <b>Rp 15.000</b><br>Rp 1,5jt–2jt → <b>Rp 20.000</b></div>
+  <div class="section-title">Pilih Bank Tujuan</div>
+  <div id="list-bank" style="padding-bottom:80px;"></div>
+</div>
+
+<!-- PRINT & FOTO -->
+<div class="page" id="page-fotocopy">
+  <div class="section-title">Daftar Harga</div>
+  <div class="harga-table"><div class="harga-table-header">🖨️ Fotocopy</div>
+    <div class="harga-row"><span class="harga-row-label">Hitam Putih A4 (2 lembar)</span><span class="harga-row-harga">Rp 1.000</span></div>
+    <div class="harga-row"><span class="harga-row-label">Warna Full A4 (1 lembar)</span><span class="harga-row-harga">Rp 1.500</span></div>
+    <div class="harga-row"><span class="harga-row-label">KTP (3 lembar)</span><span class="harga-row-harga">Rp 1.000</span></div>
+    <div class="harga-row"><span class="harga-row-label">Kertas Kosong HVS A4 (3 lbr)</span><span class="harga-row-harga">Rp 1.000</span></div>
+  </div>
+  <div class="harga-table" style="margin-top:10px;"><div class="harga-table-header">🗂️ Laminating</div>
+    <div class="harga-row"><span class="harga-row-label">A4 / F4 Full</span><span class="harga-row-harga">Rp 5.000</span></div>
+    <div class="harga-row"><span class="harga-row-label">KTP / Ukuran Setara</span><span class="harga-row-harga">Rp 3.000</span></div>
+  </div>
+  <div class="harga-table" style="margin-top:10px;"><div class="harga-table-header">📷 Cuci Foto</div>
+    <div class="harga-row"><span class="harga-row-label">6x9 cm 120gr</span><span class="harga-row-harga">Rp 2.000/lbr</span></div>
+  </div>
+  <p style="text-align:center;font-size:12px;color:#aaa;padding:16px;">*Harga dapat berubah sewaktu-waktu</p>
+</div>
+
+<!-- COMING SOON -->
+<div class="page" id="page-ml"><div class="coming-soon"><div class="cs-icon">⚔️</div><h3>Mobile Legends</h3><p>Segera hadir!</p></div></div>
+<div class="page" id="page-pubg"><div class="coming-soon"><div class="cs-icon">🎯</div><h3>PUBG Mobile</h3><p>Segera hadir!</p></div></div>
+<div class="page" id="page-valo"><div class="coming-soon"><div class="cs-icon">🏹</div><h3>Valorant</h3><p>Segera hadir!</p></div></div>
+<div class="page" id="page-roblox"><div class="coming-soon"><div class="cs-icon">🟥</div><h3>Roblox</h3><p>Segera hadir!</p></div></div>
+<div class="page" id="page-steam"><div class="coming-soon"><div class="cs-icon">🎲</div><h3>Steam</h3><p>Segera hadir!</p></div></div>
+<div class="page" id="page-unipin"><div class="coming-soon"><div class="cs-icon">🎟️</div><h3>UniPin</h3><p>Segera hadir!</p></div></div>
+<div class="page" id="page-coda"><div class="coming-soon"><div class="cs-icon">🛒</div><h3>Codashop</h3><p>Segera hadir!</p></div></div>
+<div class="page" id="page-game-lain"><div class="coming-soon"><div class="cs-icon">🕹️</div><h3>Game Lainnya</h3><p>Segera hadir!</p></div></div>
+
+<script>
+var nomorWA="628123456789";
+var pageStack=['page-home'];
+var namaOp={telkomsel:'Telkomsel',indosat:'Indosat/IM3',xl:'XL',axis:'Axis',three:'Tri (3)',smartfren:'Smartfren',byu:'By.U'};
+
+// MASA AKTIF
+var dataMasaAktif={
+  telkomsel:[{d:'5 Hari',h:'6.000'},{d:'10 Hari',h:'8.000'},{d:'15 Hari',h:'10.000'},{d:'30 Hari',h:'18.000'},{d:'90 Hari',h:'36.000'},{d:'180 Hari',h:'67.000'},{d:'360 Hari',h:'117.000'}],
+  indosat:[{d:'15 Hari',h:'11.000'},{d:'30 Hari',h:'17.000'},{d:'90 Hari',h:'36.000'},{d:'180 Hari',h:'62.000'},{d:'360 Hari',h:'112.000'}],
+  three:[{d:'4 Bulan',h:'14.000'}],
+  xl:[{d:'30 Hari',h:'10.000'}],
+  axis:[{d:'30 Hari',h:'9.000'}],
+};
+var maOrder=['telkomsel','indosat','three','xl','axis'];
+var maLabel={telkomsel:'🔴 Telkomsel',indosat:'🟡 Indosat/IM3',three:'⚫ Tri (3)',xl:'🔵 XL',axis:'🟠 Axis'};
+(function(){
+  var html='';
+  maOrder.forEach(function(op){
+    var items=dataMasaAktif[op];
+    html+='<div class="masa-aktif-section"><div class="masa-aktif-title">'+maLabel[op]+'</div>'+
+      '<div class="masa-aktif-grid">'+
+      items.map(function(i){
+        var wn='Masa Aktif '+namaOp[op]+' '+i.d;
+        return '<div class="ma-card"><div class="ma-durasi">'+i.d+'</div><div class="ma-harga">Rp '+i.h+'</div>'+
+          '<button class="btn-wa" onclick="beliWA(\''+wn+'\',\''+i.h+'\')">Beli WA</button></div>';
+      }).join('')+
+      '</div></div>';
+  });
+  document.getElementById('masa-aktif-content').innerHTML=html;
+})();
+
+// TOKEN
+var dataToken=[
+  {label:'Token PLN 5rb',nominal:'5.000',harga:'8.000'},
+  {label:'Token PLN 10rb',nominal:'10.000',harga:'13.000'},
+  {label:'Token PLN 15rb',nominal:'15.000',harga:'18.000'},
+  {label:'Token PLN 20rb',nominal:'20.000',harga:'23.000'},
+  {label:'Token PLN 25rb',nominal:'25.000',harga:'28.000'},
+  {label:'Token PLN 50rb',nominal:'50.000',harga:'55.000'},
+  {label:'Token PLN 100rb',nominal:'100.000',harga:'105.000'},
+  {label:'Token PLN 200rb',nominal:'200.000',harga:'205.000'},
+  {label:'Token PLN 500rb',nominal:'500.000',harga:'510.000'},
+  {label:'Token PLN 1 Juta',nominal:'1.000.000',harga:'1.015.000'},
+];
+(function(){
+  document.getElementById('list-token').innerHTML=dataToken.map(function(t){
+    return '<div class="produk-card"><div class="produk-info"><h4>'+t.label+'</h4><p>Nominal Rp '+t.nominal+'</p></div>'+
+      '<div class="produk-kanan"><div class="produk-harga">Rp '+t.harga+'</div>'+
+      '<button class="btn-wa" onclick="beliWA(\''+t.label+'\',\''+t.harga+'\')">Beli WA</button></div></div>';
+  }).join('');
+})();
+
+// BANK
+var bankList=[{nama:'BCA',icon:'🔵'},{nama:'BRI',icon:'🟦'},{nama:'BNI',icon:'🟠'},{nama:'Mandiri',icon:'🟡'},{nama:'Blu by BCA',icon:'💙'}];
+(function(){
+  document.getElementById('list-bank').innerHTML=bankList.map(function(b){
+    return '<div class="bank-card"><div class="bank-icon">'+b.icon+'</div>'+
+      '<div class="bank-info"><div class="bank-name">'+b.nama+'</div><div class="bank-admin">Admin sesuai nominal</div></div>'+
+      '<button class="btn-wa" onclick="beliBank(\''+b.nama+'\')">Transfer WA</button></div>';
+  }).join('');
+})();
+
+// FREE FIRE
+var ffDiamond=[
+  {jml:'5',harga:'2.000'},{jml:'12',harga:'3.000'},{jml:'20',harga:'5.000'},{jml:'25',harga:'6.000'},
+  {jml:'30',harga:'7.000'},{jml:'40',harga:'8.000'},{jml:'50',harga:'9.000'},{jml:'70',harga:'11.000'},
+  {jml:'75',harga:'12.000'},{jml:'80',harga:'13.000'},{jml:'90',harga:'14.000'},{jml:'100',harga:'15.000'},
+  {jml:'150',harga:'21.000'},{jml:'160',harga:'23.000'},{jml:'190',harga:'26.000'},{jml:'210',harga:'28.000'},
+  {jml:'260',harga:'35.000'},{jml:'280',harga:'37.000'},{jml:'300',harga:'40.000'},{jml:'355',harga:'46.000'},
+  {jml:'375',harga:'50.000'},{jml:'405',harga:'54.000'},{jml:'425',harga:'58.000'},{jml:'475',harga:'63.000'},
+  {jml:'500',harga:'67.000'},{jml:'510',harga:'68.000'},{jml:'545',harga:'73.000'},{jml:'635',harga:'84.000'},
+  {jml:'720',harga:'91.000'},{jml:'770',harga:'99.000'},{jml:'790',harga:'100.000'},{jml:'860',harga:'110.000'},
+];
+var ffMember=[
+  {nama:'Membership Level Up Pass 6–30',harga:'7.000 – 16.000'},
+  {nama:'Membership Lite (200 Diamond)',harga:'18.000'},
+  {nama:'Membership Mingguan (450 Diamond)',harga:'30.000'},
+  {nama:'Membership Bulanan (2000 Diamond)',harga:'85.000'},
+  {nama:'Booyah Pass (BP CARD)',harga:'44.000'},
+];
+(function(){
+  document.getElementById('ff-diamond-grid').innerHTML=ffDiamond.map(function(d){
+    return '<div class="diamond-card"><div class="dm-jumlah">💎 '+d.jml+' Diamond</div>'+
+      '<div class="dm-harga">Rp '+d.harga+'</div>'+
+      '<button class="btn-wa" onclick="beliWA(\'FF Diamond '+d.jml+'\',\''+d.harga+'\')">Beli WA</button></div>';
+  }).join('');
+  document.getElementById('ff-member-list').innerHTML=ffMember.map(function(m){
+    return '<div class="produk-card"><div class="produk-info"><h4>'+m.nama+'</h4><p>Free Fire</p></div>'+
+      '<div class="produk-kanan"><div class="produk-harga">Rp '+m.harga+'</div>'+
+      '<button class="btn-wa" onclick="beliWA(\''+m.nama+'\',\''+m.harga+'\')">Beli WA</button></div></div>';
+  }).join('');
+})();
+function ffTab(tab,el){
+  document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('ff-diamond').style.display=tab==='diamond'?'block':'none';
+  document.getElementById('ff-member').style.display=tab==='member'?'block':'none';
+}
+
+// PULSA
+var rawPulsa=[
+  ["5rb","7.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["6rb","8.000",["telkomsel"]],
+  ["10rb","12.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["12rb","14.000",["indosat","smartfren"]],
+  ["15rb","17.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["20rb","22.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["25rb","27.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["30rb","32.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["35rb","37.000",["smartfren","three","indosat","telkomsel","byu"]],
+  ["40rb","43.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["45rb","48.000",["smartfren","three","indosat","telkomsel","byu"]],
+  ["50rb","54.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["55rb","59.000",["smartfren","three","indosat","telkomsel","byu"]],
+  ["60rb","65.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["65rb","69.000",["smartfren","three","indosat","telkomsel","byu"]],
+  ["70rb","75.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["75rb","80.000",["smartfren","three","telkomsel","byu"]],
+  ["80rb","85.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["85rb","90.000",["smartfren","three","indosat","telkomsel","byu"]],
+  ["90rb","95.000",["smartfren","axis","three","xl","indosat","telkomsel","byu"]],
+  ["95rb","100.000",["smartfren","telkomsel","byu"]],
+  ["100rb","105.000",["smartfren","axis","three","xl","indosat","telkomsel","byu"]],
+  ["105rb","110.000",["three","indosat"]],
+  ["115rb","120.000",["indosat"]],
+  ["125rb","130.000",["smartfren","three","indosat"]],
+  ["150rb","155.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["175rb","180.000",["indosat"]],
+  ["200rb","205.000",["smartfren","three","axis","xl","indosat","telkomsel","byu"]],
+  ["225rb","230.000",["indosat"]],
+  ["250rb","255.000",["indosat"]],
+  ["300rb","305.000",["indosat","byu"]],
+  ["400rb","405.000",["indosat"]],
+  ["500rb","505.000",["indosat","byu"]],
+];
+var dataPulsa={};
+rawPulsa.forEach(function(r){r[2].forEach(function(op){if(!dataPulsa[op])dataPulsa[op]=[];dataPulsa[op].push({nominal:r[0],harga:r[1]});});});
+Object.keys(dataPulsa).forEach(function(op){var el=document.getElementById('jml-'+op);if(el)el.textContent=dataPulsa[op].length+' nominal';});
+
+// PAKET DATA
+var dataPaket={
+  telkomsel:[{nama:'Telkomsel 1GB',detail:'1 Hari',harga:'9.000',tipe:'harian'},{nama:'Telkomsel 5GB',detail:'7 Hari',harga:'25.000',tipe:'mingguan'},{nama:'Telkomsel 20GB',detail:'30 Hari',harga:'65.000',tipe:'bulanan'},{nama:'Telkomsel 50GB',detail:'30 Hari',harga:'115.000',tipe:'bulanan'}],
+  indosat:[{nama:'IM3 2GB',detail:'1 Hari',harga:'8.000',tipe:'harian'},{nama:'IM3 10GB',detail:'7 Hari',harga:'22.000',tipe:'mingguan'},{nama:'IM3 30GB',detail:'30 Hari',harga:'75.000',tipe:'bulanan'}],
+  xl:[{nama:'XL 1.5GB',detail:'1 Hari',harga:'8.500',tipe:'harian'},{nama:'XL 15GB',detail:'30 Hari',harga:'60.000',tipe:'bulanan'}],
+  three:[{nama:'Tri 2GB',detail:'2 Hari',harga:'7.000',tipe:'harian'},{nama:'Tri 12GB',detail:'30 Hari',harga:'45.000',tipe:'bulanan'}],
+  smartfren:[{nama:'Smartfren 3GB',detail:'30 Hari',harga:'20.000',tipe:'bulanan'},{nama:'Smartfren 15GB',detail:'30 Hari',harga:'50.000',tipe:'bulanan'}],
+  byu:[{nama:'By.U 3GB',detail:'30 Hari',harga:'18.000',tipe:'bulanan'},{nama:'By.U 10GB',detail:'30 Hari',harga:'40.000',tipe:'bulanan'}]
+};
+var opPaketAktif=null,filterAktif='semua';
+
+// NAVIGASI
+var pageTitles={'page-home':'🛍️ Ridwan Store','page-paketdata':'Paket Data','page-pulsa':'Pulsa','page-token':'Token Listrik','page-masaaktif':'Masa Aktif','page-game':'Top Up Game','page-ewallet':'E-Wallet','page-bank':'Transfer Bank','page-fotocopy':'Print & Foto','page-ff':'Free Fire','page-ml':'Mobile Legends','page-pubg':'PUBG Mobile','page-valo':'Valorant','page-roblox':'Roblox','page-steam':'Steam','page-unipin':'UniPin','page-coda':'Codashop','page-game-lain':'Game Lainnya'};
+
+function goPage(pageId,title){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById(pageId).classList.add('active');
+  pageStack.push(pageId);
+  document.getElementById('navbar-title').textContent=title||pageTitles[pageId]||'Ridwan Store';
+  document.getElementById('back-btn').style.visibility='visible';
+  window.scrollTo(0,0);
+}
+function goBack(){
+  if(pageStack.length<=1)return;
+  pageStack.pop();
+  var prev=pageStack[pageStack.length-1];
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById(prev).classList.add('active');
+  document.getElementById('navbar-title').textContent=pageTitles[prev]||'Ridwan Store';
+  document.getElementById('back-btn').style.visibility=prev==='page-home'?'hidden':'visible';
+  window.scrollTo(0,0);
+}
+function pilihOpPulsa(op,el){
+  document.querySelectorAll('#page-pulsa .op-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  var list=document.getElementById('list-pulsa');
+  var produk=dataPulsa[op]||[];
+  list.innerHTML='<div class="divider-label">Pulsa '+namaOp[op]+' — '+produk.length+' nominal tersedia</div>'+
+    produk.map(function(p){
+      var waN='Pulsa '+namaOp[op]+' '+p.nominal;
+      return '<div class="produk-card"><div class="produk-info"><h4>Pulsa '+p.nominal+'</h4><p>Langsung aktif</p></div>'+
+        '<div class="produk-kanan"><div class="produk-harga">Rp '+p.harga+'</div>'+
+        '<button class="btn-wa" onclick="beliWA(\''+waN+'\',\''+p.harga+'\')">Beli WA</button></div></div>';
+    }).join('');
+  setTimeout(function(){list.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+function pilihOpPaket(op,el){
+  document.querySelectorAll('#page-paketdata .op-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  opPaketAktif=op;filterAktif='semua';
+  document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active');});
+  document.querySelector('.filter-chip').classList.add('active');
+  document.getElementById('filter-paket').style.display='flex';
+  renderPaket();
+}
+function filterPaket(tipe,el){
+  filterAktif=tipe;
+  document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');
+  renderPaket();
+}
+function renderPaket(){
+  var list=document.getElementById('list-paket');
+  var produk=(dataPaket[opPaketAktif]||[]).filter(function(p){return filterAktif==='semua'||p.tipe===filterAktif;});
+  if(!produk.length){list.innerHTML='<div style="text-align:center;padding:40px 20px;color:#aaa;font-size:14px;">Tidak ada paket</div>';return;}
+  list.innerHTML='<div class="divider-label">Paket '+namaOp[opPaketAktif]+' — '+produk.length+' paket</div>'+
+    produk.map(function(p){
+      return '<div class="produk-card"><div class="produk-info"><h4>'+p.nama+'</h4><p>'+p.detail+'</p></div>'+
+        '<div class="produk-kanan"><div class="produk-harga">Rp '+p.harga+'</div>'+
+        '<button class="btn-wa" onclick="beliWA(\''+p.nama+'\',\''+p.harga+'\')">Beli WA</button></div></div>';
+    }).join('');
+}
+function beliEwallet(nama){
+  var pesan="Halo Ridwan Store, saya mau Top Up E-Wallet:\n\nE-Wallet: "+nama+"\nNominal Top Up: Rp \nNo. Akun / HP: ";
+  window.open("https://wa.me/"+nomorWA+"?text="+encodeURIComponent(pesan),"_blank");
+}
+function beliBank(nama){
+  var pesan="Halo Ridwan Store, saya mau Top Up via Transfer Bank:\n\nBank: "+nama+"\nNominal: Rp \nUntuk: ";
+  window.open("https://wa.me/"+nomorWA+"?text="+encodeURIComponent(pesan),"_blank");
+}
+function beliWA(nama,harga){
+  var pesan="Halo Ridwan Store, saya mau beli "+nama+" harga Rp "+harga+".\n\nNo HP / Meter PLN / ID Game: ";
+  window.open("https://wa.me/"+nomorWA+"?text="+encodeURIComponent(pesan),"_blank");
+}
+</script>
