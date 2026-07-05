@@ -1,4 +1,9 @@
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ridwan Store</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 auto;}
@@ -17,13 +22,10 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
 .kat-card:active{transform:scale(0.96);}
 .kat-icon{font-size:30px;margin-bottom:6px;}
 .kat-label{font-size:12px;font-weight:bold;color:#333;line-height:1.3;}
-
-/* PAYMENT FOOTER */
 .payment-footer{background:#ffffff;border-top:3px solid #0066cc;padding:14px 16px 20px;margin-top:4px;}
 .payment-footer-title{font-size:12px;font-weight:bold;color:#0066cc;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;text-align:center;}
 .payment-icons{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
 .pay-badge{background:#f0f4f8;border:1px solid #dde3ec;border-radius:8px;padding:5px 11px;font-size:12px;font-weight:bold;color:#333;}
-
 .op-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 12px 8px;}
 .op-card{background:#ffffff;border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;border:2px solid transparent;transition:all 0.15s;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
 .op-card:active{transform:scale(0.96);}
@@ -88,6 +90,8 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
 .ma-card .ma-harga{font-size:13px;color:#ff5500;font-weight:bold;}
 .ma-card .btn-wa{width:100%;margin-top:8px;padding:7px 0;font-size:11px;}
 </style>
+</head>
+<body>
 
 <div class="navbar">
   <button class="back-btn" id="back-btn" onclick="goBack()" style="visibility:hidden;">←</button>
@@ -112,8 +116,6 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
     <button class="kat-card" onclick="goPage('page-masaaktif','Masa Aktif')"><div class="kat-icon">📅</div><div class="kat-label">Masa Aktif</div></button>
     <button class="kat-card" onclick="goPage('page-fotocopy','Print & Foto')"><div class="kat-icon">🖨️</div><div class="kat-label">Print & Foto</div></button>
   </div>
-
-  <!-- PAYMENT INFO — sekarang di bawah grid, tidak ganggu fokus -->
   <div class="payment-footer">
     <div class="payment-footer-title">💳 Metode Pembayaran yang Kami Terima</div>
     <div class="payment-icons">
@@ -265,7 +267,7 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
 <div class="page" id="page-game-lain"><div class="coming-soon"><div class="cs-icon">🕹️</div><h3>Game Lainnya</h3><p>Segera hadir!</p></div></div>
 
 <script>
-var nomorWA="628123456789";
+var nomorWA="6287833354289";
 var pageStack=['page-home'];
 var namaOp={telkomsel:'Telkomsel',indosat:'Indosat/IM3',xl:'XL',axis:'Axis',three:'Tri (3)',smartfren:'Smartfren',byu:'By.U'};
 
@@ -338,7 +340,7 @@ var ffDiamond=[
   {jml:'720',harga:'91.000'},{jml:'770',harga:'99.000'},{jml:'790',harga:'100.000'},{jml:'860',harga:'110.000'},
 ];
 var ffMember=[
-  {nama:'Membership Level Up Pass 6–30',harga:'7.000 – 16.000'},
+  {nama:'Membership Level Up Pass 6-30',harga:'7.000 - 16.000'},
   {nama:'Membership Lite (200 Diamond)',harga:'18.000'},
   {nama:'Membership Mingguan (450 Diamond)',harga:'30.000'},
   {nama:'Membership Bulanan (2000 Diamond)',harga:'85.000'},
@@ -403,7 +405,7 @@ var dataPulsa={};
 rawPulsa.forEach(function(r){r[2].forEach(function(op){if(!dataPulsa[op])dataPulsa[op]=[];dataPulsa[op].push({nominal:r[0],harga:r[1]});});});
 Object.keys(dataPulsa).forEach(function(op){var el=document.getElementById('jml-'+op);if(el)el.textContent=dataPulsa[op].length+' nominal';});
 
-// PAKET DATA
+// PAKET DATA (placeholder - isi sesuai data asli)
 var dataPaket={
   telkomsel:[{nama:'Telkomsel 1GB',detail:'1 Hari',harga:'9.000',tipe:'harian'},{nama:'Telkomsel 5GB',detail:'7 Hari',harga:'25.000',tipe:'mingguan'},{nama:'Telkomsel 20GB',detail:'30 Hari',harga:'65.000',tipe:'bulanan'},{nama:'Telkomsel 50GB',detail:'30 Hari',harga:'115.000',tipe:'bulanan'}],
   indosat:[{nama:'IM3 2GB',detail:'1 Hari',harga:'8.000',tipe:'harian'},{nama:'IM3 10GB',detail:'7 Hari',harga:'22.000',tipe:'mingguan'},{nama:'IM3 30GB',detail:'30 Hari',harga:'75.000',tipe:'bulanan'}],
@@ -440,7 +442,7 @@ function pilihOpPulsa(op,el){
   el.classList.add('selected');
   var list=document.getElementById('list-pulsa');
   var produk=dataPulsa[op]||[];
-  list.innerHTML='<div class="divider-label">Pulsa '+namaOp[op]+' — '+produk.length+' nominal tersedia</div>'+
+  list.innerHTML='<div class="divider-label">Pulsa '+namaOp[op]+' - '+produk.length+' nominal tersedia</div>'+
     produk.map(function(p){
       var waN='Pulsa '+namaOp[op]+' '+p.nominal;
       return '<div class="produk-card"><div class="produk-info"><h4>Pulsa '+p.nominal+'</h4><p>Langsung aktif</p></div>'+
@@ -468,7 +470,7 @@ function renderPaket(){
   var list=document.getElementById('list-paket');
   var produk=(dataPaket[opPaketAktif]||[]).filter(function(p){return filterAktif==='semua'||p.tipe===filterAktif;});
   if(!produk.length){list.innerHTML='<div style="text-align:center;padding:40px 20px;color:#aaa;font-size:14px;">Tidak ada paket</div>';return;}
-  list.innerHTML='<div class="divider-label">Paket '+namaOp[opPaketAktif]+' — '+produk.length+' paket</div>'+
+  list.innerHTML='<div class="divider-label">Paket '+namaOp[opPaketAktif]+' - '+produk.length+' paket</div>'+
     produk.map(function(p){
       return '<div class="produk-card"><div class="produk-info"><h4>'+p.nama+'</h4><p>'+p.detail+'</p></div>'+
         '<div class="produk-kanan"><div class="produk-harga">Rp '+p.harga+'</div>'+
@@ -488,3 +490,5 @@ function beliWA(nama,harga){
   window.open("https://wa.me/"+nomorWA+"?text="+encodeURIComponent(pesan),"_blank");
 }
 </script>
+</body>
+</html>
