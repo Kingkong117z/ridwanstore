@@ -9,7 +9,9 @@
 body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 auto;}
 .navbar{background:#0066cc;color:#ffffff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
 .navbar-title{font-size:18px;font-weight:bold;flex:1;text-align:center;color:#ffffff;}
-.back-btn{background:none;border:none;color:#ffffff;font-size:22px;cursor:pointer;padding:0 4px;line-height:1;}
+.back-btn{background:none;border:none;color:#ffffff;font-size:14px;font-weight:bold;cursor:pointer;padding:0 4px;line-height:1;white-space:nowrap;}
+.home-btn{background:rgba(255,255,255,0.2);border:none;color:#ffffff;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:8px;line-height:1;transition:background 0.15s;}
+.home-btn:active{background:rgba(255,255,255,0.4);}
 .page{display:none;animation:fadeIn 0.2s ease;}
 .page.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
@@ -94,9 +96,9 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
 <body>
 
 <div class="navbar">
-  <button class="back-btn" id="back-btn" onclick="goBack()" style="visibility:hidden;">←</button>
+  <button class="back-btn" id="back-btn" onclick="goBack()" style="visibility:hidden;">← Kembali</button>
   <span class="navbar-title" id="navbar-title">🛍️ Ridwan Store</span>
-  <div style="width:30px;"></div>
+  <button class="home-btn" id="home-btn" onclick="goHome()" style="visibility:hidden;">🏠</button>
 </div>
 
 <!-- HOME -->
@@ -133,21 +135,25 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
 
 <!-- PAKET DATA -->
 <div class="page" id="page-paketdata">
-  <div class="section-title">Pilih Operator</div>
-  <div class="op-grid">
-    <div class="op-card" onclick="pilihOpPaket('telkomsel',this)"><div class="op-icon">🔴</div><div class="op-name">Telkomsel</div></div>
-    <div class="op-card" onclick="pilihOpPaket('indosat',this)"><div class="op-icon">🟡</div><div class="op-name">Indosat/IM3</div></div>
-    <div class="op-card" onclick="pilihOpPaket('xl',this)"><div class="op-icon">🔵</div><div class="op-name">XL / Axis</div></div>
-    <div class="op-card" onclick="pilihOpPaket('three',this)"><div class="op-icon">⚫</div><div class="op-name">Tri (3)</div></div>
-    <div class="op-card" onclick="pilihOpPaket('smartfren',this)"><div class="op-icon">🟣</div><div class="op-name">Smartfren</div></div>
-    <div class="op-card" onclick="pilihOpPaket('byu',this)"><div class="op-icon">🟢</div><div class="op-name">By.U</div></div>
+  <div id="op-area">
+    <div class="section-title">Pilih Operator</div>
+    <div class="op-grid">
+      <div class="op-card" onclick="pilihOpPaket('axis',this)"><div class="op-icon">🟠</div><div class="op-name">Axis</div></div>
+      <div class="op-card" onclick="pilihOpPaket('telkomsel',this)"><div class="op-icon">🔴</div><div class="op-name">Telkomsel</div></div>
+      <div class="op-card" onclick="pilihOpPaket('indosat',this)"><div class="op-icon">🟡</div><div class="op-name">Indosat/IM3</div></div>
+      <div class="op-card" onclick="pilihOpPaket('xl',this)"><div class="op-icon">🔵</div><div class="op-name">XL</div></div>
+      <div class="op-card" onclick="pilihOpPaket('three',this)"><div class="op-icon">⚫</div><div class="op-name">Tri (3)</div></div>
+      <div class="op-card" onclick="pilihOpPaket('smartfren',this)"><div class="op-icon">🟣</div><div class="op-name">Smartfren</div></div>
+      <div class="op-card" onclick="pilihOpPaket('byu',this)"><div class="op-icon">🟢</div><div class="op-name">By.U</div></div>
+    </div>
   </div>
-  <div id="filter-paket" class="filter-bar" style="display:none;">
-    <button class="filter-chip active" onclick="filterPaket('semua',this)">Semua</button>
-    <button class="filter-chip" onclick="filterPaket('harian',this)">Harian</button>
-    <button class="filter-chip" onclick="filterPaket('mingguan',this)">Mingguan</button>
-    <button class="filter-chip" onclick="filterPaket('bulanan',this)">Bulanan</button>
+  <!-- Pilih nama paket (muncul kalau operator punya sub-paket, misal Axis → Mini Aigo) -->
+  <div id="nama-paket-area" style="display:none;">
+    <div class="section-title">Pilih Nama Paket</div>
+    <div id="nama-paket-grid" class="kategori-grid"></div>
   </div>
+  <!-- Filter durasi (muncul setelah nama paket dipilih) -->
+  <div id="filter-paket" class="filter-bar" style="display:none;"></div>
   <div id="list-paket" class="produk-list" style="margin-top:8px;">
     <div style="text-align:center;padding:40px 20px;color:#aaa;"><div style="font-size:40px;">👆</div><p style="margin-top:10px;">Pilih operator di atas</p></div>
   </div>
@@ -155,15 +161,17 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
 
 <!-- PULSA -->
 <div class="page" id="page-pulsa">
-  <div class="section-title">Pilih Operator</div>
-  <div class="op-grid">
-    <div class="op-card" onclick="pilihOpPulsa('telkomsel',this)"><div class="op-icon">🔴</div><div class="op-name">Telkomsel</div><div class="op-jumlah" id="jml-telkomsel"></div></div>
-    <div class="op-card" onclick="pilihOpPulsa('indosat',this)"><div class="op-icon">🟡</div><div class="op-name">Indosat/IM3</div><div class="op-jumlah" id="jml-indosat"></div></div>
-    <div class="op-card" onclick="pilihOpPulsa('xl',this)"><div class="op-icon">🔵</div><div class="op-name">XL</div><div class="op-jumlah" id="jml-xl"></div></div>
-    <div class="op-card" onclick="pilihOpPulsa('axis',this)"><div class="op-icon">🟠</div><div class="op-name">Axis</div><div class="op-jumlah" id="jml-axis"></div></div>
-    <div class="op-card" onclick="pilihOpPulsa('three',this)"><div class="op-icon">⚫</div><div class="op-name">Tri (3)</div><div class="op-jumlah" id="jml-three"></div></div>
-    <div class="op-card" onclick="pilihOpPulsa('smartfren',this)"><div class="op-icon">🟣</div><div class="op-name">Smartfren</div><div class="op-jumlah" id="jml-smartfren"></div></div>
-    <div class="op-card" onclick="pilihOpPulsa('byu',this)"><div class="op-icon">🟢</div><div class="op-name">By.U</div><div class="op-jumlah" id="jml-byu"></div></div>
+  <div id="op-pulsa-area">
+    <div class="section-title">Pilih Operator</div>
+    <div class="op-grid">
+      <div class="op-card" onclick="pilihOpPulsa('telkomsel',this)"><div class="op-icon">🔴</div><div class="op-name">Telkomsel</div><div class="op-jumlah" id="jml-telkomsel"></div></div>
+      <div class="op-card" onclick="pilihOpPulsa('indosat',this)"><div class="op-icon">🟡</div><div class="op-name">Indosat/IM3</div><div class="op-jumlah" id="jml-indosat"></div></div>
+      <div class="op-card" onclick="pilihOpPulsa('xl',this)"><div class="op-icon">🔵</div><div class="op-name">XL</div><div class="op-jumlah" id="jml-xl"></div></div>
+      <div class="op-card" onclick="pilihOpPulsa('axis',this)"><div class="op-icon">🟠</div><div class="op-name">Axis</div><div class="op-jumlah" id="jml-axis"></div></div>
+      <div class="op-card" onclick="pilihOpPulsa('three',this)"><div class="op-icon">⚫</div><div class="op-name">Tri (3)</div><div class="op-jumlah" id="jml-three"></div></div>
+      <div class="op-card" onclick="pilihOpPulsa('smartfren',this)"><div class="op-icon">🟣</div><div class="op-name">Smartfren</div><div class="op-jumlah" id="jml-smartfren"></div></div>
+      <div class="op-card" onclick="pilihOpPulsa('byu',this)"><div class="op-icon">🟢</div><div class="op-name">By.U</div><div class="op-jumlah" id="jml-byu"></div></div>
+    </div>
   </div>
   <div id="list-pulsa" class="produk-list" style="margin-top:8px;">
     <div style="text-align:center;padding:40px 20px;color:#aaa;"><div style="font-size:40px;">👆</div><p style="margin-top:10px;">Pilih operator di atas</p></div>
@@ -187,15 +195,8 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
 <div class="page" id="page-game">
   <div class="section-title">Pilih Game</div>
   <div class="kategori-grid">
-    <button class="kat-card" onclick="goPage('page-ml','Mobile Legends')"><div class="kat-icon">⚔️</div><div class="kat-label">Mobile Legends</div></button>
     <button class="kat-card" onclick="goPage('page-ff','Free Fire')"><div class="kat-icon">🔥</div><div class="kat-label">Free Fire</div></button>
-    <button class="kat-card" onclick="goPage('page-pubg','PUBG Mobile')"><div class="kat-icon">🎯</div><div class="kat-label">PUBG Mobile</div></button>
-    <button class="kat-card" onclick="goPage('page-valo','Valorant')"><div class="kat-icon">🏹</div><div class="kat-label">Valorant</div></button>
-    <button class="kat-card" onclick="goPage('page-roblox','Roblox')"><div class="kat-icon">🟥</div><div class="kat-label">Roblox</div></button>
-    <button class="kat-card" onclick="goPage('page-steam','Steam')"><div class="kat-icon">🎲</div><div class="kat-label">Steam</div></button>
-    <button class="kat-card" onclick="goPage('page-unipin','UniPin')"><div class="kat-icon">🎟️</div><div class="kat-label">UniPin</div></button>
-    <button class="kat-card" onclick="goPage('page-coda','Codashop')"><div class="kat-icon">🛒</div><div class="kat-label">Codashop</div></button>
-    <button class="kat-card" onclick="goPage('page-game-lain','Game Lainnya')"><div class="kat-icon">🕹️</div><div class="kat-label">Lainnya</div></button>
+    <button class="kat-card" onclick="goPage('page-ml','Mobile Legends')"><div class="kat-icon">⚔️</div><div class="kat-label">Mobile Legends</div></button>
   </div>
 </div>
 
@@ -270,6 +271,7 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;max-width:480px;margin:0 au
 var nomorWA="6287833354289";
 var pageStack=['page-home'];
 var namaOp={telkomsel:'Telkomsel',indosat:'Indosat/IM3',xl:'XL',axis:'Axis',three:'Tri (3)',smartfren:'Smartfren',byu:'By.U'};
+var namaOpPaket={telkomsel:'Telkomsel',indosat:'Indosat/IM3',xl:'XL',axis:'Axis - Mini Aigo',three:'Tri (3)',smartfren:'Smartfren',byu:'By.U'};
 
 // MASA AKTIF
 var dataMasaAktif={
@@ -405,41 +407,204 @@ var dataPulsa={};
 rawPulsa.forEach(function(r){r[2].forEach(function(op){if(!dataPulsa[op])dataPulsa[op]=[];dataPulsa[op].push({nominal:r[0],harga:r[1]});});});
 Object.keys(dataPulsa).forEach(function(op){var el=document.getElementById('jml-'+op);if(el)el.textContent=dataPulsa[op].length+' nominal';});
 
-// PAKET DATA (placeholder - isi sesuai data asli)
+// PAKET DATA
 var dataPaket={
-  telkomsel:[{nama:'Telkomsel 1GB',detail:'1 Hari',harga:'9.000',tipe:'harian'},{nama:'Telkomsel 5GB',detail:'7 Hari',harga:'25.000',tipe:'mingguan'},{nama:'Telkomsel 20GB',detail:'30 Hari',harga:'65.000',tipe:'bulanan'},{nama:'Telkomsel 50GB',detail:'30 Hari',harga:'115.000',tipe:'bulanan'}],
-  indosat:[{nama:'IM3 2GB',detail:'1 Hari',harga:'8.000',tipe:'harian'},{nama:'IM3 10GB',detail:'7 Hari',harga:'22.000',tipe:'mingguan'},{nama:'IM3 30GB',detail:'30 Hari',harga:'75.000',tipe:'bulanan'}],
-  xl:[{nama:'XL 1.5GB',detail:'1 Hari',harga:'8.500',tipe:'harian'},{nama:'XL 15GB',detail:'30 Hari',harga:'60.000',tipe:'bulanan'}],
-  three:[{nama:'Tri 2GB',detail:'2 Hari',harga:'7.000',tipe:'harian'},{nama:'Tri 12GB',detail:'30 Hari',harga:'45.000',tipe:'bulanan'}],
-  smartfren:[{nama:'Smartfren 3GB',detail:'30 Hari',harga:'20.000',tipe:'bulanan'},{nama:'Smartfren 15GB',detail:'30 Hari',harga:'50.000',tipe:'bulanan'}],
-  byu:[{nama:'By.U 3GB',detail:'30 Hari',harga:'18.000',tipe:'bulanan'},{nama:'By.U 10GB',detail:'30 Hari',harga:'40.000',tipe:'bulanan'}]
+  telkomsel:[
+    {nama:'Telkomsel 1GB',detail:'1 Hari',harga:'9.000',tipe:'1hari'},
+    {nama:'Telkomsel 5GB',detail:'7 Hari',harga:'25.000',tipe:'7hari'},
+    {nama:'Telkomsel 20GB',detail:'30 Hari',harga:'65.000',tipe:'30hari'},
+    {nama:'Telkomsel 50GB',detail:'30 Hari',harga:'115.000',tipe:'30hari'}
+  ],
+  indosat:[
+    {nama:'IM3 2GB',detail:'1 Hari',harga:'8.000',tipe:'1hari'},
+    {nama:'IM3 10GB',detail:'7 Hari',harga:'22.000',tipe:'7hari'},
+    {nama:'IM3 30GB',detail:'30 Hari',harga:'75.000',tipe:'30hari'}
+  ],
+  xl:[
+    {nama:'XL 1.5GB',detail:'1 Hari',harga:'8.500',tipe:'1hari'},
+    {nama:'XL 15GB',detail:'30 Hari',harga:'60.000',tipe:'30hari'}
+  ],
+  axis:[
+    {nama:'Mini Aigo 6GB',detail:'1 Hari',harga:'8.000',tipe:'1hari'},
+    {nama:'Mini Aigo 15GB',detail:'1 Hari',harga:'10.000',tipe:'1hari'},
+    {nama:'Mini Aigo Unlimited',detail:'1 Hari 24 Jam',harga:'27.000',tipe:'1hari'},
+    {nama:'Mini Aigo 5.5GB',detail:'2 Hari',harga:'10.000',tipe:'2hari'},
+    {nama:'Mini Aigo 7.5GB',detail:'2 Hari',harga:'11.000',tipe:'2hari'},
+    {nama:'Mini Aigo 14GB',detail:'2 Hari',harga:'14.000',tipe:'2hari'},
+    {nama:'Mini Aigo 3.5GB',detail:'3 Hari',harga:'11.000',tipe:'3hari'},
+    {nama:'Mini Aigo 5.5GB',detail:'3 Hari',harga:'13.000',tipe:'3hari'},
+    {nama:'Mini Aigo 8GB',detail:'3 Hari',harga:'15.000',tipe:'3hari'},
+    {nama:'Mini Aigo 10GB',detail:'3 Hari',harga:'17.000',tipe:'3hari'},
+    {nama:'Mini Aigo 13GB',detail:'3 Hari',harga:'18.000',tipe:'3hari'},
+    {nama:'Mini Aigo 18GB',detail:'3 Hari',harga:'19.000',tipe:'3hari'},
+    {nama:'Mini Aigo 30GB',detail:'3 Hari',harga:'22.000',tipe:'3hari'},
+    {nama:'Mini Aigo 3.5GB',detail:'5 Hari',harga:'14.000',tipe:'5hari'},
+    {nama:'Mini Aigo 5GB',detail:'5 Hari',harga:'15.000',tipe:'5hari'},
+    {nama:'Mini Aigo 5.5GB',detail:'5 Hari',harga:'16.000',tipe:'5hari'},
+    {nama:'Mini Aigo 6GB',detail:'5 Hari',harga:'17.000',tipe:'5hari'},
+    {nama:'Mini Aigo 7GB',detail:'5 Hari',harga:'18.000',tipe:'5hari'},
+    {nama:'Mini Aigo 9GB',detail:'5 Hari',harga:'19.000',tipe:'5hari'},
+    {nama:'Mini Aigo 14GB',detail:'5 Hari',harga:'23.000',tipe:'5hari'},
+    {nama:'Mini Aigo 16GB',detail:'5 Hari',harga:'25.000',tipe:'5hari'},
+    {nama:'Mini Aigo 24GB',detail:'5 Hari',harga:'28.000',tipe:'5hari'},
+    {nama:'Mini Aigo 25GB',detail:'5 Hari',harga:'29.000',tipe:'5hari'},
+    {nama:'Mini Aigo 33GB',detail:'5 Hari',harga:'33.000',tipe:'5hari'},
+    {nama:'Mini Aigo 50GB',detail:'5 Hari',harga:'36.000',tipe:'5hari'},
+    {nama:'Mini Aigo 4GB',detail:'7 Hari',harga:'15.000',tipe:'7hari'},
+    {nama:'Mini Aigo 5.5GB',detail:'7 Hari',harga:'18.000',tipe:'7hari'},
+    {nama:'Mini Aigo 8GB',detail:'7 Hari',harga:'20.000',tipe:'7hari'},
+    {nama:'Mini Aigo 12GB',detail:'7 Hari',harga:'25.000',tipe:'7hari'},
+    {nama:'Mini Aigo 19GB',detail:'7 Hari',harga:'28.000',tipe:'7hari'},
+    {nama:'Mini Aigo 25GB',detail:'7 Hari',harga:'31.000',tipe:'7hari'},
+    {nama:'Mini Aigo 45GB',detail:'7 Hari',harga:'47.000',tipe:'7hari'},
+    {nama:'Mini Aigo 4GB',detail:'14 Hari',harga:'20.000',tipe:'14hari'},
+    {nama:'Mini Aigo 6GB',detail:'14 Hari',harga:'24.000',tipe:'14hari'},
+    {nama:'Mini Aigo 9GB',detail:'14 Hari',harga:'29.000',tipe:'14hari'},
+    {nama:'Mini Aigo 17GB',detail:'14 Hari',harga:'36.000',tipe:'14hari'},
+    {nama:'Mini Aigo 27GB',detail:'14 Hari',harga:'47.000',tipe:'14hari'},
+    // Bronet Bulanan - 28 Hari
+    {nama:'Bronet 3.5GB',detail:'28 Hari',harga:'20.000',tipe:'28hari'},
+    {nama:'Bronet 7GB',detail:'28 Hari',harga:'34.000',tipe:'28hari'},
+    {nama:'Bronet 10GB',detail:'28 Hari',harga:'36.000',tipe:'28hari'},
+    {nama:'Bronet 16GB',detail:'28 Hari',harga:'46.000',tipe:'28hari'},
+    {nama:'Bronet 26GB',detail:'28 Hari',harga:'63.000',tipe:'28hari'},
+    {nama:'Bronet 40GB',detail:'28 Hari',harga:'77.000',tipe:'28hari'},
+    {nama:'Bronet 65GB',detail:'28 Hari',harga:'99.000',tipe:'28hari'},
+    {nama:'Bronet 100GB',detail:'28 Hari',harga:'122.000',tipe:'28hari'},
+    {nama:'Bronet 150GB',detail:'28 Hari',harga:'150.000',tipe:'28hari'},
+    {nama:'Bronet 105GB',detail:'28 Hari',harga:'171.000',tipe:'28hari'},
+    {nama:'Bronet 250GB',detail:'28 Hari',harga:'196.000',tipe:'28hari'},
+    {nama:'Bronet 400GB',detail:'28 Hari',harga:'245.000',tipe:'28hari'},
+    {nama:'Bronet 600GB',detail:'28 Hari',harga:'294.000',tipe:'28hari'},
+    // Bronet Bulanan - 30 Hari
+    {nama:'Bronet 500MB',detail:'30 Hari',harga:'6.000',tipe:'30hari'},
+    {nama:'Bronet 1GB',detail:'30 Hari',harga:'10.000',tipe:'30hari'},
+    {nama:'Bronet 5GB',detail:'30 Hari',harga:'30.000',tipe:'30hari'},
+    {nama:'Bronet 16GB',detail:'30 Hari',harga:'77.000',tipe:'30hari'},
+    {nama:'Bronet 35GB',detail:'30 Hari',harga:'79.000',tipe:'30hari'},
+    {nama:'Bronet 155GB',detail:'30 Hari',harga:'237.000',tipe:'30hari'},
+    {nama:'Bronet 250GB',detail:'30 Hari',harga:'305.000',tipe:'30hari'},
+    // Bronet Bulanan - 60 Hari
+    {nama:'Bronet 2GB',detail:'60 Hari',harga:'31.000',tipe:'60hari'},
+    {nama:'Bronet 3GB',detail:'60 Hari',harga:'38.000',tipe:'60hari'},
+    {nama:'Bronet 5GB',detail:'60 Hari',harga:'58.000',tipe:'60hari'},
+    {nama:'Bronet 8GB',detail:'60 Hari',harga:'78.000',tipe:'60hari'},
+    {nama:'Bronet 10GB',detail:'60 Hari',harga:'89.000',tipe:'60hari'},
+    {nama:'Bronet 12GB',detail:'60 Hari',harga:'99.000',tipe:'60hari'},
+    {nama:'Bronet 16GB',detail:'60 Hari',harga:'111.000',tipe:'60hari'},
+    {nama:'Bronet 50GB',detail:'60 Hari',harga:'114.000',tipe:'60hari'},
+    {nama:'Bronet 90GB',detail:'60 Hari',harga:'175.000',tipe:'60hari'},
+  ],
+  three:[
+    {nama:'Tri 2GB',detail:'2 Hari',harga:'7.000',tipe:'2hari'},
+    {nama:'Tri 12GB',detail:'30 Hari',harga:'45.000',tipe:'30hari'}
+  ],
+  smartfren:[
+    {nama:'Smartfren 3GB',detail:'30 Hari',harga:'20.000',tipe:'30hari'},
+    {nama:'Smartfren 15GB',detail:'30 Hari',harga:'50.000',tipe:'30hari'}
+  ],
+  byu:[
+    {nama:'By.U 3GB',detail:'30 Hari',harga:'18.000',tipe:'30hari'},
+    {nama:'By.U 10GB',detail:'30 Hari',harga:'40.000',tipe:'30hari'}
+  ]
 };
-var opPaketAktif=null,filterAktif='semua';
+var opPaketAktif=null,filterAktif=null,namaPaketAktif=null;
+
+// Konfigurasi: operator yang punya sub-nama-paket
+var subPaket={
+  axis:[
+    {nama:'Mini Aigo',icon:'🟠'},
+    {nama:'Bronet Bulanan',icon:'📶'},
+  ],
+};
+
+// tambah 28hari dan 60hari ke tipeLabel
+var tipeLabel={'1hari':'1 Hari','2hari':'2 Hari','3hari':'3 Hari','5hari':'5 Hari','7hari':'7 Hari','14hari':'14 Hari','28hari':'28 Hari','30hari':'30 Hari','60hari':'60 Hari','bulanan':'Bulanan'};
 
 // NAVIGASI
 var pageTitles={'page-home':'🛍️ Ridwan Store','page-paketdata':'Paket Data','page-pulsa':'Pulsa','page-token':'Token Listrik','page-masaaktif':'Masa Aktif','page-game':'Top Up Game','page-ewallet':'E-Wallet','page-bank':'Transfer Bank','page-fotocopy':'Print & Foto','page-ff':'Free Fire','page-ml':'Mobile Legends','page-pubg':'PUBG Mobile','page-valo':'Valorant','page-roblox':'Roblox','page-steam':'Steam','page-unipin':'UniPin','page-coda':'Codashop','page-game-lain':'Game Lainnya'};
 
+function goHome(){
+  pageStack=['page-home'];
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('page-home').classList.add('active');
+  document.getElementById('navbar-title').textContent='🛍️ Ridwan Store';
+  document.getElementById('back-btn').style.visibility='hidden';
+  document.getElementById('home-btn').style.visibility='hidden';
+  resetPaketData();
+  resetPulsa();
+  window.scrollTo(0,0);
+}
 function goPage(pageId,title){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.getElementById(pageId).classList.add('active');
   pageStack.push(pageId);
   document.getElementById('navbar-title').textContent=title||pageTitles[pageId]||'Ridwan Store';
   document.getElementById('back-btn').style.visibility='visible';
+  document.getElementById('home-btn').style.visibility='visible';
+  if(pageId==='page-paketdata') resetPaketData();
+  if(pageId==='page-pulsa') resetPulsa();
   window.scrollTo(0,0);
 }
 function goBack(){
   if(pageStack.length<=1)return;
+
+  var halamanSkrg=pageStack[pageStack.length-1];
+
+  // Level 3: dari daftar harga → kembali ke pilih nama paket
+  if(halamanSkrg==='page-paketdata' && namaPaketAktif!==null){
+    namaPaketAktif=null;
+    filterAktif=null;
+    document.getElementById('op-area').style.display='none';
+    document.getElementById('nama-paket-area').style.display='block';
+    document.getElementById('filter-paket').style.display='none';
+    document.getElementById('filter-paket').innerHTML='';
+    document.getElementById('list-paket').innerHTML='';
+    document.querySelectorAll('#nama-paket-grid .kat-card').forEach(function(c){c.style.borderColor='transparent';c.style.background='#fff';});
+    window.scrollTo(0,0);
+    return;
+  }
+
+  // Level 2: dari nama paket → kembali ke pilih operator
+  if(halamanSkrg==='page-paketdata' && opPaketAktif!==null && namaPaketAktif===null){
+    resetPaketData();
+    window.scrollTo(0,0);
+    return;
+  }
+
+  // Level 1: keluar halaman
   pageStack.pop();
   var prev=pageStack[pageStack.length-1];
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.getElementById(prev).classList.add('active');
   document.getElementById('navbar-title').textContent=pageTitles[prev]||'Ridwan Store';
-  document.getElementById('back-btn').style.visibility=prev==='page-home'?'hidden':'visible';
+  var diHome=prev==='page-home';
+  document.getElementById('back-btn').style.visibility=diHome?'hidden':'visible';
+  document.getElementById('home-btn').style.visibility=diHome?'hidden':'visible';
+  if(prev==='page-paketdata') resetPaketData();
+  if(prev==='page-pulsa') resetPulsa();
   window.scrollTo(0,0);
 }
-function pilihOpPulsa(op,el){
+
+function resetPulsa(){
+  document.getElementById('op-pulsa-area').style.display='block';
+  document.getElementById('list-pulsa').innerHTML='<div style="text-align:center;padding:40px 20px;color:#aaa;"><div style="font-size:40px;">👆</div><p style="margin-top:10px;">Pilih operator di atas</p></div>';
   document.querySelectorAll('#page-pulsa .op-card').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected');
+}
+
+function resetPaketData(){
+  opPaketAktif=null;
+  filterAktif=null;
+  namaPaketAktif=null;
+  document.getElementById('op-area').style.display='block';
+  document.getElementById('nama-paket-area').style.display='none';
+  document.getElementById('filter-paket').style.display='none';
+  document.getElementById('filter-paket').innerHTML='';
+  document.getElementById('list-paket').innerHTML='<div style="text-align:center;padding:40px 20px;color:#aaa;"><div style="font-size:40px;">👆</div><p style="margin-top:10px;">Pilih operator di atas</p></div>';
+  document.querySelectorAll('#page-paketdata .op-card').forEach(function(c){c.classList.remove('selected');});
+}
+function pilihOpPulsa(op,el){
+  document.getElementById('op-pulsa-area').style.display='none';
   var list=document.getElementById('list-pulsa');
   var produk=dataPulsa[op]||[];
   list.innerHTML='<div class="divider-label">Pulsa '+namaOp[op]+' - '+produk.length+' nominal tersedia</div>'+
@@ -449,28 +614,108 @@ function pilihOpPulsa(op,el){
         '<div class="produk-kanan"><div class="produk-harga">Rp '+p.harga+'</div>'+
         '<button class="btn-wa" onclick="beliWA(\''+waN+'\',\''+p.harga+'\')">Beli WA</button></div></div>';
     }).join('');
-  setTimeout(function(){list.scrollIntoView({behavior:'smooth',block:'start'});},100);
+  window.scrollTo(0,0);
 }
 function pilihOpPaket(op,el){
   document.querySelectorAll('#page-paketdata .op-card').forEach(function(c){c.classList.remove('selected');});
   el.classList.add('selected');
-  opPaketAktif=op;filterAktif='semua';
-  document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active');});
-  document.querySelector('.filter-chip').classList.add('active');
-  document.getElementById('filter-paket').style.display='flex';
-  renderPaket();
+  opPaketAktif=op;
+  filterAktif=null;
+  namaPaketAktif=null;
+  document.getElementById('filter-paket').style.display='none';
+  document.getElementById('filter-paket').innerHTML='';
+  document.getElementById('list-paket').innerHTML='';
+
+  if(subPaket[op]){
+    // Sembunyikan operator, tampilkan nama paket - tunggu user pilih
+    document.getElementById('op-area').style.display='none';
+    document.getElementById('nama-paket-area').style.display='block';
+    document.getElementById('nama-paket-grid').innerHTML=subPaket[op].map(function(s){
+      return '<button class="kat-card" onclick="pilihNamaPaket(\''+s.nama+'\',this)">'+
+        '<div class="kat-icon">'+s.icon+'</div>'+
+        '<div class="kat-label">'+s.nama+'</div>'+
+        '</button>';
+    }).join('');
+    document.getElementById('list-paket').innerHTML='';
+  } else {
+    document.getElementById('op-area').style.display='none';
+    document.getElementById('nama-paket-area').style.display='none';
+    tampilFilterDurasi(op);
+  }
 }
+
+function pilihNamaPaket(nama,el){
+  namaPaketAktif=nama;
+  filterAktif=null;
+
+  // Sembunyikan nama paket area setelah dipilih
+  document.getElementById('nama-paket-area').style.display='none';
+  document.getElementById('op-area').style.display='none';
+
+  tampilFilterDurasi(opPaketAktif);
+
+  // Auto-pilih durasi pertama yang tersedia
+  setTimeout(function(){
+    var chips=document.querySelectorAll('#filter-paket .filter-chip');
+    if(chips.length>0){
+      chips[0].classList.add('active');
+      filterAktif=chips[0].getAttribute('data-tipe');
+      renderPaket();
+    }
+  },50);
+}
+
+function tampilFilterDurasi(op){
+  var allProduk=dataPaket[op]||[];
+  // Filter paket berdasarkan nama paket aktif kalau ada
+  if(namaPaketAktif){
+    var prefix=namaPaketAktif==='Mini Aigo'?'Mini Aigo':'Bronet';
+    allProduk=allProduk.filter(function(p){return p.nama.indexOf(prefix)===0;});
+  }
+  var tipeOrder=['1hari','2hari','3hari','5hari','7hari','14hari','28hari','30hari','60hari','bulanan'];
+  var tipeList=tipeOrder.filter(function(t){
+    return allProduk.some(function(p){return p.tipe===t;});
+  });
+  var filterBar=document.getElementById('filter-paket');
+  filterBar.innerHTML=tipeList.map(function(t){
+    return '<button class="filter-chip" data-tipe="'+t+'" onclick="filterPaket(\''+t+'\',this)">'+tipeLabel[t]+'</button>';
+  }).join('');
+  filterBar.style.display='flex';
+
+  if(!subPaket[op]){
+    setTimeout(function(){
+      var chips=document.querySelectorAll('#filter-paket .filter-chip');
+      if(chips.length>0){
+        chips[0].classList.add('active');
+        filterAktif=chips[0].getAttribute('data-tipe');
+        renderPaket();
+      }
+    },50);
+  }
+}
+
 function filterPaket(tipe,el){
   filterAktif=tipe;
-  document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active');});
+  document.querySelectorAll('#filter-paket .filter-chip').forEach(function(c){c.classList.remove('active');});
   el.classList.add('active');
   renderPaket();
 }
+
 function renderPaket(){
   var list=document.getElementById('list-paket');
-  var produk=(dataPaket[opPaketAktif]||[]).filter(function(p){return filterAktif==='semua'||p.tipe===filterAktif;});
+  var semua=dataPaket[opPaketAktif]||[];
+  var produk=semua.filter(function(p){
+    var cocokTipe=!filterAktif||p.tipe===filterAktif;
+    var cocokNama=true;
+    if(namaPaketAktif){
+      var prefix=namaPaketAktif==='Mini Aigo'?'Mini Aigo':'Bronet';
+      cocokNama=p.nama.indexOf(prefix)===0;
+    }
+    return cocokTipe&&cocokNama;
+  });
   if(!produk.length){list.innerHTML='<div style="text-align:center;padding:40px 20px;color:#aaa;font-size:14px;">Tidak ada paket</div>';return;}
-  list.innerHTML='<div class="divider-label">Paket '+namaOp[opPaketAktif]+' - '+produk.length+' paket</div>'+
+  var labelHeader=namaPaketAktif?namaPaketAktif:namaOpPaket[opPaketAktif];
+  list.innerHTML='<div class="divider-label">'+labelHeader+' - '+produk.length+' paket</div>'+
     produk.map(function(p){
       return '<div class="produk-card"><div class="produk-info"><h4>'+p.nama+'</h4><p>'+p.detail+'</p></div>'+
         '<div class="produk-kanan"><div class="produk-harga">Rp '+p.harga+'</div>'+
